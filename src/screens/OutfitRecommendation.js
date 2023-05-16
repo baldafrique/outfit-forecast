@@ -1,36 +1,90 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-const OutfitRecommendation = ({ weather }) => {
-  // 날씨에 따른 옷 추천 로직
-  let recommendation = "";
+const OutfitRecommendation = () => {
+  const [weather, setWeather] = useState("");
+
+  useEffect(() => {
+    // 랜덤한 날씨 생성
+    const weathers = ["sunny", "cloudy", "rainy"];
+    const randomWeather = weathers[Math.floor(Math.random() * weathers.length)];
+    setWeather(randomWeather);
+  }, []);
+
+  let top = "";
+  let bottom = "";
+  let shoes = "";
+  let backgroundColor = "";
+  let textColor = "";
+
   if (weather === "sunny") {
-    recommendation = "오늘은 햇살이 좋으니 가벼운 옷을 입어보세요.";
+    top = "반팔 티셔츠";
+    bottom = "반바지";
+    shoes = "샌들";
+    backgroundColor = "#FAD450";
+    textColor = "#333333";
   } else if (weather === "cloudy") {
-    recommendation = "하늘이 흐리니 자켓을 준비하는 것이 좋을 것 같아요.";
+    top = "얇은 가디건";
+    bottom = "청바지";
+    shoes = "로퍼";
+    backgroundColor = "#BDBDBD";
+    textColor = "#333333";
   } else if (weather === "rainy") {
-    recommendation = "비가 오니 우산을 챙기고 방수 재킷을 입어주세요.";
+    top = "방수 재킷";
+    bottom = "긴 바지";
+    shoes = "장화";
+    backgroundColor = "#5E85D2";
+    textColor = "#FFFFFF";
   } else {
-    recommendation = "오늘은 특별한 날씨 정보가 없습니다.";
+    top = "오늘은 특별한 날씨 정보가 없습니다.";
+    bottom = "";
+    shoes = "";
+    backgroundColor = "#FFFFFF";
+    textColor = "#333333";
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>{recommendation}</Text>
+    <View style={[styles.container, { backgroundColor }]}>
+      <Text style={[styles.text, { color: textColor }]}>
+        오늘의 옷차림 추천
+      </Text>
+      <Text style={[styles.outfitItem, { color: textColor }]}>상의: {top}</Text>
+      <Text style={[styles.outfitItem, { color: textColor }]}>
+        하의: {bottom}
+      </Text>
+      <Text style={[styles.outfitItem, { color: textColor }]}>
+        신발: {shoes}
+      </Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
     padding: 16,
     marginTop: 16,
     borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   text: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
+    textAlign: "center",
+    lineHeight: 24,
+    marginBottom: 8,
+  },
+  outfitItem: {
+    fontSize: 16,
+    textAlign: "center",
   },
 });
 

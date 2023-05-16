@@ -1,20 +1,40 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components/native";
 import { Alert } from "react-native";
-import { Image, Input, Button } from "../components";
+import { Input, Button } from "../components";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { validateEmail, removeWhitespace } from "../utils/common";
 import { login } from "../utils/firebase";
-// import { theme } from "../theme";
-import theme from "../theme.js";
-
+import { theme } from "../theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const Container = styled.View`
+const InputContainer = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
   padding: 0 20px;
+`;
+
+const ImageContainer = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+  margin-bottom: 40px;
+`;
+
+const Image = ({ source }) => {
+  const insets = useSafeAreaInsets();
+  return (
+    <ImageContainer insets={insets}>
+      <StyledImage source={source} />
+    </ImageContainer>
+  );
+};
+
+const StyledImage = styled.Image`
+  width: 250px;
+  height: 250px;
 `;
 
 const ErrorText = styled.Text`
@@ -53,10 +73,10 @@ const Login = ({ navigation }) => {
   const _handleLoginButtonPress = async () => {
     try {
       const user = await login({ email, password });
-      Alert.alert("Login Success", user.email);
+      // Alert.alert("Login successful", user.email);
       navigation.navigate("LoginSuccess", { userEmail: user.email });
     } catch (e) {
-      Alert.alert("Login Eroror", e.message);
+      Alert.alert("Login failed", e.message);
     }
   };
 
@@ -65,8 +85,8 @@ const Login = ({ navigation }) => {
       contentContainerStyle={{ flex: 1 }}
       extraScrollHeight={20}
     >
-      <Container insets={insets}>
-        <Image />
+      <InputContainer insets={insets}>
+        <Image source={require("../../assets/loginImage.png")} />
         <Input
           label="Email"
           value={email}
@@ -81,7 +101,7 @@ const Login = ({ navigation }) => {
           value={password}
           onChangeText={_handlePasswordChange}
           onSubmitEditing={() => {
-            _handleLoginButtonPress;
+            _handleLoginButtonPress();
           }}
           placeholder="Password"
           returnKeyType="done"
@@ -98,7 +118,7 @@ const Login = ({ navigation }) => {
           onPress={() => navigation.navigate("SignUp")}
           isFilled={false}
         />
-      </Container>
+      </InputContainer>
     </KeyboardAwareScrollView>
   );
 };

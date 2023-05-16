@@ -5,14 +5,43 @@ import { Input, Button } from "../components";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { validateEmail, removeWhitespace } from "../utils/common";
 import { signUp } from "../utils/firebase";
-// import { theme } from "../theme";
-import theme from "../theme.js";
+import { theme } from "../theme";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const Container = styled.View`
+const SignUpContainer = styled.View`
   justify-content: center;
   align-items: center;
   background-color: ${theme.background};
-  padding: 40px 20px;
+  padding: 0px 20px;
+`;
+
+const ImageContainer = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Image = ({ source }) => {
+  const insets = useSafeAreaInsets();
+  return (
+    <ImageContainer insets={insets}>
+      <StyledImage source={source} />
+    </ImageContainer>
+  );
+};
+
+const StyledImage = styled.Image`
+  width: 270px;
+  height: 270px;
+`;
+
+const ErrorText = styled.Text`
+  align-items: flex-start;
+  width: 100%;
+  height: 20px;
+  margin-bottom: 10px;
+  line-height: 20px;
+  color: ${theme.errorText};
 `;
 
 const SignUp = () => {
@@ -21,7 +50,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [disalbed, setDisalbed] = useState(true);
+  const [disabled, setDisabled] = useState(true);
 
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -36,7 +65,7 @@ const SignUp = () => {
       } else if (!validateEmail(email)) {
         _errorMessage = "Please verify your email.";
       } else if (password.length < 6) {
-        _errorMessage = "The password must contain 6 characters at least.";
+        _errorMessage = "The password must contain at least 6 characters.";
       } else if (password !== passwordConfirm) {
         _errorMessage = "Passwords need to match.";
       } else {
@@ -49,7 +78,7 @@ const SignUp = () => {
   }, [name, email, password, passwordConfirm]);
 
   useEffect(() => {
-    setDisalbed(
+    setDisabled(
       !(name && email && password && passwordConfirm && !errorMessage)
     );
   }, [name, email, password, passwordConfirm, errorMessage]);
@@ -58,18 +87,19 @@ const SignUp = () => {
     try {
       const user = await signUp({ email, password });
       console.log(user);
-      Alert.alert("Sign up Success", user.email);
+      Alert.alert("Sign up successful");
     } catch (e) {
-      Alert.alert("Sign up Error", e.message);
+      Alert.alert("Sign up failed", e.message);
     }
   };
 
   return (
     <KeyboardAwareScrollView
-      contentContainerStyle={{ flex: 1 }}
+      contentContainerStyle={{ flexGrow: 1 }}
       extraScrollHeight={20}
     >
       <SignUpContainer>
+        <Image source={require("../../assets/signUpImage.png")} />
         <Input
           label="Name"
           value={name}
@@ -107,13 +137,11 @@ const SignUp = () => {
         />
         <Input
           ref={passwordConfirmRef}
-          label="Password Confirm"
+          label="Confirm Password"
           value={passwordConfirm}
           onChangeText={(text) => setPasswordConfirm(removeWhitespace(text))}
-          onSubmitEditing={() => {
-            _handleSignUpButtonPress;
-          }}
-          placeholder="Password"
+          onSubmitEditing={_handleSignUpButtonPress}
+          placeholder="Confirm Password"
           returnKeyType="done"
           isPassword
         />
@@ -121,7 +149,7 @@ const SignUp = () => {
         <Button
           title="Sign Up"
           onPress={_handleSignUpButtonPress}
-          disabled={disalbed}
+          disabled={disabled}
         />
       </SignUpContainer>
     </KeyboardAwareScrollView>

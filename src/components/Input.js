@@ -1,7 +1,7 @@
 import React, { useState, forwardRef } from "react";
 import styled from "styled-components/native";
 import PropTypes from "prop-types";
-import theme from "../theme.js";
+import { theme } from "../theme";
 
 const Container = styled.View`
   flex-direction: column;
@@ -21,8 +21,8 @@ const StyledTextInput = styled.TextInput`
   color: ${theme.text};
   padding: 20px 10px;
   font-size: 16px;
-  border: 1px solid ${({ isFocused }) =>
-    isFocused ? theme.text : theme.inputBorder}
+  border: 1px solid
+    ${({ isFocused }) => (isFocused ? theme.text : theme.inputBorder)};
   border-radius: 8px;
 `;
 
