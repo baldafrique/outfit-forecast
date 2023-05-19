@@ -60,7 +60,7 @@ const CLOTHES = [
   },
 ];
 
-const OutfitRecommendation = () => {
+export default function Recommend() {
   //useState Hook 사용
   const [tempAvg, setTempAvg] = useState(null);
   const [recommendedClothes, setRecommendedClothes] = useState(null);
@@ -157,7 +157,7 @@ const OutfitRecommendation = () => {
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -224,5 +224,3 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-
-export default OutfitRecommendation;
